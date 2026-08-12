@@ -1,0 +1,254 @@
+{
+ "actions": [],
+ "autoname": "format:OPD-{YYYY}-{#####}",
+ "creation": "2026-08-11 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "patient_info_section",
+  "patient_name",
+  "gender",
+  "phone_no",
+  "column_break_patient",
+  "patient",
+  "company",
+  "opd_info_section",
+  "doctor",
+  "date",
+  "column_break_opd",
+  "doctor_session",
+  "session_name",
+  "from_time",
+  "to_time",
+  "checkup_fee",
+  "token_no",
+  "status",
+  "sales_invoice"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient_info_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Information"
+  },
+  {
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Patient Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "Male\nFemale\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone_no",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Phone No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_patient",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient Record",
+   "options": "Patient",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Hospital/Clinic",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "opd_info_section",
+   "fieldtype": "Section Break",
+   "label": "OPD Information"
+  },
+  {
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Doctor",
+   "options": "Doctor",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_opd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "doctor_session",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Doctor's Session",
+   "options": "Doctor Session",
+   "reqd": 1
+  },
+  {
+   "fieldname": "session_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Session Name",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "From Time",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "To Time",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "checkup_fee",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Checkup Fee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "token_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Token No",
+   "read_only": 1
+  },
+  {
+   "default": "Waiting",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Waiting\nIn Consultation\nCompleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Sales Invoice",
+   "options": "Sales Invoice",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-11 16:06:24.494827",
+ "modified_by": "Administrator",
+ "module": "OPD Management",
+ "name": "OPD Form",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Receptionist",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Doctor"
+  }
+ ],
+ "default_print_format": "OPD Registration Slip",
+ "row_format": "Dynamic",
+ "search_fields": "patient_name, phone_no, doctor",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Waiting"
+  },
+  {
+   "color": "Blue",
+   "title": "In Consultation"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  }
+ ],
+ "title_field": "patient_name"
+}

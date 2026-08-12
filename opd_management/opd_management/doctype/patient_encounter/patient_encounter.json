@@ -1,0 +1,256 @@
+{
+ "actions": [],
+ "autoname": "format:ENC-{YYYY}-{#####}",
+ "creation": "2026-08-11 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "encounter_details_section",
+  "patient",
+  "patient_name",
+  "doctor",
+  "doctor_session",
+  "column_break_enc",
+  "opd_form",
+  "encounter_date",
+  "encounter_time",
+  "status",
+  "vital_signs_section",
+  "temperature",
+  "blood_pressure",
+  "column_break_vitals",
+  "weight",
+  "height",
+  "heart_rate",
+  "diagnoses_section",
+  "diagnoses",
+  "prescription_section",
+  "prescriptions"
+ ],
+ "fields": [
+  {
+   "fieldname": "encounter_details_section",
+   "fieldtype": "Section Break",
+   "label": "Encounter Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Patient",
+   "options": "Patient",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "patient.patient_name",
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Patient Name"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Doctor",
+   "options": "Doctor",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "doctor_session",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Doctor's Session",
+   "options": "Doctor Session",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_enc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "opd_form",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "OPD Form",
+   "options": "OPD Form",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Today",
+   "fieldname": "encounter_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Encounter Date",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "encounter_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Encounter Time",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "In Consultation",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "In Consultation\nCompleted"
+  },
+  {
+   "fieldname": "vital_signs_section",
+   "fieldtype": "Section Break",
+   "label": "Vital Signs"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "temperature",
+   "fieldtype": "Float",
+   "label": "Temperature (\u00b0C)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "blood_pressure",
+   "fieldtype": "Data",
+   "label": "Blood Pressure"
+  },
+  {
+   "fieldname": "column_break_vitals",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight (kg)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "height",
+   "fieldtype": "Float",
+   "label": "Height (cm)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "heart_rate",
+   "fieldtype": "Int",
+   "label": "Heart Rate (bpm)"
+  },
+  {
+   "fieldname": "diagnoses_section",
+   "fieldtype": "Section Break",
+   "label": "Diagnoses"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "diagnoses",
+   "fieldtype": "Table",
+   "label": "Diagnoses",
+   "options": "Encounter Diagnosis"
+  },
+  {
+   "fieldname": "prescription_section",
+   "fieldtype": "Section Break",
+   "label": "Prescription"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "prescriptions",
+   "fieldtype": "Table",
+   "label": "Prescriptions",
+   "options": "Encounter Prescription"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-12 15:35:00.000000",
+ "modified_by": "Administrator",
+ "module": "OPD Management",
+ "name": "Patient Encounter",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Doctor",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "OPD Receptionist"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "patient, doctor, opd_form",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Blue",
+   "title": "In Consultation"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  }
+ ],
+ "title_field": "patient_name"
+}
