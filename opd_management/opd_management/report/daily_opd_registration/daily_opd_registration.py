@@ -22,7 +22,8 @@ def get_columns():
 		{"label": _("Checkup Fee"), "fieldname": "checkup_fee", "fieldtype": "Currency", "width": 120},
 		{"label": _("Hospital/Clinic"), "fieldname": "company", "fieldtype": "Link", "options": "Company", "width": 140},
 		{"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 110},
-		{"label": _("Sales Invoice"), "fieldname": "sales_invoice", "fieldtype": "Link", "options": "Sales Invoice", "width": 140}
+		{"label": _("Sales Invoice"), "fieldname": "sales_invoice", "fieldtype": "Link", "options": "Sales Invoice", "width": 140},
+		{"label": _("Invoice Status"), "fieldname": "invoice_status", "fieldtype": "Data", "width": 130}
 	]
 
 def get_data(filters):
@@ -92,6 +93,12 @@ def get_data(filters):
 				d["doctor_session"] = f"Session: {s_name} ({f_time} - {t_time})"
 			else:
 				d["doctor_session"] = f"Session: {s_name}"
+
+		if d.get("sales_invoice"):
+			inv_status = frappe.db.get_value("Sales Invoice", d.get("sales_invoice"), "status")
+			d["invoice_status"] = inv_status or _("Draft")
+		else:
+			d["invoice_status"] = _("Not Generated")
 
 	return data
 

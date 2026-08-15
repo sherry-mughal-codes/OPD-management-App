@@ -58,8 +58,17 @@ class OPDForm(Document):
 				frappe.throw(_(f"The session's max patients are {max_patients} and {existing_tokens} tokens are already generated."))
 
 	def on_submit(self):
-		self.ensure_patient_record()
 		self.validate_capacity_and_generate_token()
+		self.ensure_patient_record()
+
+	def on_cancel(self):
+		if self.patient:
+			submitted_count = frappe.db.sql("""
+				SELECT count(name) FROM `tabOPD Form`
+				WHERE patient = %s AND docstatus = 1 AND name != %s
+			""", (self.patient, self.name))[0][0] or 0
+			pat_doc = frappe.get_doc("Patient", self.patient)
+			pat_doc.db_set("visits", submitted_count, update_modified=False)
 
 	def ensure_patient_record(self):
 		if not self.patient and self.phone_no:
@@ -72,12 +81,25 @@ class OPDForm(Document):
 					"patient_name": self.patient_name or self.phone_no.strip(),
 					"gender": self.gender or "Other",
 					"phone_no": self.phone_no.strip(),
-					"company": self.company
+					"company": self.company,
+					"visits": 1
 				})
 				new_patient.insert(ignore_permissions=True)
 				self.patient = new_patient.name
 
 			frappe.db.set_value("OPD Form", self.name, "patient", self.patient)
+
+		if self.patient:
+			# Count all other submitted forms for this patient
+			other_submitted = frappe.db.sql("""
+				SELECT count(name) FROM `tabOPD Form`
+				WHERE patient = %s AND docstatus = 1 AND name != %s
+			""", (self.patient, self.name))[0][0] or 0
+
+			# Since this OPD form is currently being submitted, total visits is other_submitted + 1
+			total_visits = other_submitted + 1
+			pat_doc = frappe.get_doc("Patient", self.patient)
+			pat_doc.db_set("visits", total_visits, update_modified=False)
 
 	def validate_capacity_and_generate_token(self):
 		if not self.doctor or not self.date or not self.doctor_session:
@@ -101,6 +123,7 @@ class OPDForm(Document):
 				  AND name != %s
 			""", (self.doctor, self.date, self.doctor_session, self.name))[0][0] or 0
 
+			# Capacity check runs here (inside lock) — BEFORE patient creation
 			if max_patients > 0 and existing_tokens >= max_patients:
 				frappe.throw(_(f"The session's max patients are {max_patients} and {existing_tokens} tokens are already generated."))
 
@@ -112,15 +135,6 @@ class OPDForm(Document):
 				"token_no": next_token,
 				"status": "Waiting"
 			})
-
-			# Update patient visit count
-			if self.patient:
-				total_visits = frappe.db.sql("""
-					SELECT count(name) FROM `tabOPD Form`
-					WHERE patient = %s AND docstatus = 1
-				""", (self.patient,))[0][0] or 1
-
-				frappe.db.set_value("Patient", self.patient, "visits", total_visits)
 
 		finally:
 			frappe.db.sql(f"SELECT RELEASE_LOCK('{lock_key}')")
