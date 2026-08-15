@@ -6,9 +6,9 @@
  "engine": "InnoDB",
  "field_order": [
   "patient_info_section",
+  "phone_no",
   "patient_name",
   "gender",
-  "phone_no",
   "column_break_patient",
   "patient",
   "company",
@@ -23,13 +23,23 @@
   "checkup_fee",
   "token_no",
   "status",
-  "sales_invoice"
+  "sales_invoice",
+  "print_count"
  ],
  "fields": [
   {
    "fieldname": "patient_info_section",
    "fieldtype": "Section Break",
    "label": "Patient Information"
+  },
+  {
+   "fieldname": "phone_no",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Phone No",
+   "reqd": 1
   },
   {
    "fieldname": "patient_name",
@@ -45,15 +55,6 @@
    "fieldtype": "Select",
    "label": "Gender",
    "options": "Male\nFemale\nOther",
-   "reqd": 1
-  },
-  {
-   "fieldname": "phone_no",
-   "fieldtype": "Data",
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Phone No",
    "reqd": 1
   },
   {
@@ -169,6 +170,14 @@
    "in_standard_filter": 1,
    "label": "Sales Invoice",
    "options": "Sales Invoice",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "print_count",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Print Count",
    "read_only": 1
   }
  ],

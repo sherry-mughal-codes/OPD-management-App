@@ -177,6 +177,29 @@ def get_session_details(doctor, session):
 	}
 
 @frappe.whitelist()
+def get_phone_suggestions(txt):
+	if not txt:
+		return []
+	txt = txt.strip()
+	return frappe.db.sql("""
+		SELECT phone_no, patient_name, gender, name AS patient, company
+		FROM `tabPatient`
+		WHERE phone_no LIKE %s OR patient_name LIKE %s
+		ORDER BY modified DESC
+		LIMIT 10
+	""", (f"%{txt}%", f"%{txt}%"), as_dict=True)
+
+@frappe.whitelist()
+def increment_print_count(docname):
+	if not docname:
+		return 0
+	count = frappe.db.get_value("OPD Form", docname, "print_count") or 0
+	new_count = count + 1
+	frappe.db.set_value("OPD Form", docname, "print_count", new_count, update_modified=False)
+	frappe.db.commit()
+	return new_count
+
+@frappe.whitelist()
 def create_sales_invoice(opd_form_name):
 	opd = frappe.get_doc("OPD Form", opd_form_name)
 	if opd.sales_invoice:
@@ -213,13 +236,19 @@ def create_sales_invoice(opd_form_name):
 		"customer": customer_name,
 		"company": opd.company,
 		"posting_date": opd.date,
+		"is_pos": 1,
 		"items": [{
 			"item_code": "OPD Consultation",
 			"qty": 1,
 			"rate": opd.checkup_fee
+		}],
+		"payments": [{
+			"mode_of_payment": "Cash",
+			"amount": opd.checkup_fee
 		}]
 	})
 	sinv.insert(ignore_permissions=True)
+	sinv.submit()
 
 	frappe.db.set_value("OPD Form", opd.name, "sales_invoice", sinv.name)
 	return sinv.name

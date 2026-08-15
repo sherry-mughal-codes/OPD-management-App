@@ -10,9 +10,55 @@ frappe.ui.form.on('OPD Form', {
 		});
 	},
 
+	onload: function(frm) {
+		frm.trigger('setup_phone_autocomplete');
+	},
+
+	setup_phone_autocomplete: function(frm) {
+		if (!frm.fields_dict.phone_no || !frm.fields_dict.phone_no.$input) return;
+		var $input = frm.fields_dict.phone_no.$input;
+		if ($input.data('has_phone_autocomplete')) return;
+		$input.data('has_phone_autocomplete', true);
+
+		var awesomplete = new Awesomplete($input[0], {
+			minChars: 2,
+			maxItems: 10,
+			autoFirst: true,
+			data: function(item) {
+				return {
+					label: item.phone_no + ' — ' + item.patient_name,
+					value: item.phone_no,
+					patient_data: item
+				};
+			}
+		});
+
+		$input.on('input', function() {
+			var val = $(this).val();
+			if (val && val.length >= 2) {
+				frappe.call({
+					method: 'opd_management.opd_management.doctype.opd_form.opd_form.get_phone_suggestions',
+					args: { txt: val },
+					callback: function(r) {
+						if (r.message && r.message.length) {
+							awesomplete.list = r.message;
+						}
+					}
+				});
+			}
+		});
+
+		$input.on('awesomplete-selectcomplete', function(e) {
+			var selected = e.text;
+			var phone_val = (selected && selected.value) ? selected.value : $input.val();
+			frm.set_value('phone_no', phone_val);
+			frm.trigger('phone_no');
+		});
+	},
+
 	phone_no: function(frm) {
 		var digits = (frm.doc.phone_no || '').replace(/[^0-9]/g, '');
-		if (digits.length >= 10) {
+		if (digits.length >= 7) {
 			frappe.call({
 				method: 'frappe.client.get_value',
 				args: {
@@ -83,9 +129,20 @@ frappe.ui.form.on('OPD Form', {
 	},
 
 	refresh: function(frm) {
+		frm.trigger('setup_phone_autocomplete');
 		frm.trigger('update_session_description');
 
 		if (frm.doc.docstatus === 1) {
+			frm.add_custom_button(__('Print Slip'), function() {
+				frappe.call({
+					method: 'opd_management.opd_management.doctype.opd_form.opd_form.increment_print_count',
+					args: { docname: frm.doc.name },
+					callback: function() {
+						frm.print_doc();
+					}
+				});
+			}, __('Actions')).addClass('btn-info');
+
 			if (!frm.doc.sales_invoice) {
 				frm.add_custom_button(__('Generate Sales Invoice'), function() {
 					frappe.call({
@@ -93,7 +150,7 @@ frappe.ui.form.on('OPD Form', {
 						args: { opd_form_name: frm.doc.name },
 						callback: function(r) {
 							if (r.message) {
-								frappe.msgprint(__('Sales Invoice created: {0}', [r.message]));
+								frappe.msgprint(__('Sales Invoice created and marked as Paid: {0}', [r.message]));
 								frm.reload_doc();
 							}
 						}
@@ -140,3 +197,4 @@ frappe.ui.form.on('OPD Form', {
 		}
 	}
 });
+
