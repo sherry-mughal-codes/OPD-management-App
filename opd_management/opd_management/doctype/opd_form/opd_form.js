@@ -52,18 +52,21 @@ frappe.ui.form.on('OPD Form', {
 			var selected = e.text;
 			var phone_val = (selected && selected.value) ? selected.value : $input.val();
 			frm.set_value('phone_no', phone_val);
-			frm.trigger('phone_no');
 		});
 	},
 
 	phone_no: function(frm) {
-		var digits = (frm.doc.phone_no || '').replace(/[^0-9]/g, '');
+		var current_phone = (frm.doc.phone_no || '').trim();
+		if (frm._last_checked_phone && frm._last_checked_phone === current_phone) return;
+
+		var digits = current_phone.replace(/[^0-9]/g, '');
 		if (digits.length >= 7) {
+			frm._last_checked_phone = current_phone;
 			frappe.call({
 				method: 'frappe.client.get_value',
 				args: {
 					doctype: 'Patient',
-					filters: { phone_no: frm.doc.phone_no.trim() },
+					filters: { phone_no: current_phone },
 					fieldname: ['name', 'patient_name', 'gender', 'company']
 				},
 				callback: function(r) {
@@ -86,6 +89,7 @@ frappe.ui.form.on('OPD Form', {
 				}
 			});
 		} else if (digits.length === 0) {
+			frm._last_checked_phone = '';
 			frm.set_value('patient', '');
 		}
 	},
